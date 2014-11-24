@@ -1,0 +1,83 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	    xmlns:tools="http://schemas.android.com/tools"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent" >
+	<LinearLayout 
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical" >
+	
+	    <EditText
+	        android:id="@+id/cadastro_consulta_etPalavra"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:gravity="center"
+	        android:hint="@string/Type_word" />
+	
+	    <TextView
+	        android:id="@+id/cadastro_consulta_tvClassesGramaticais"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:text="@string/Part_of_Speach"
+	        android:textAppearance="?android:attr/textAppearanceMedium" />
+	
+	    <EditText
+	        android:id="@+id/cadastro_consulta_etClasses"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:focusable="false"
+	        android:gravity="center"
+	        android:hint="@string/Select_Part_of_Speach" />
+		<TextView
+	        android:id="@+id/cadastro_consulta_tvTextoExemplo"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:text="@string/example"
+	        android:textAppearance="?android:attr/textAppearanceMedium" />
+		<LinearLayout
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:orientation="horizontal" >
+
+		    <EditText
+		        android:id="@+id/cadastro_consulta_etAddExemplo"
+		        android:layout_width="0dp"
+		        android:layout_height="wrap_content"
+		        android:layout_gravity="bottom"
+		        android:layout_weight="1.03"
+		        android:hint="@string/Type_an_example" >
+		    </EditText>
+
+		    <Button
+		        android:id="@+id/cadastro_consulta_btAddExemplo"
+		        style="?android:attr/buttonStyleSmall"
+		        android:layout_width="50dp"
+		        android:layout_height="wrap_content"
+		        android:text="@string/ok"
+		         />
+		</LinearLayout>
+	    
+	    <ExpandableListView
+	        android:id="@+id/cadastro_consulta_elvExemplosClasses" 
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content">
+	        
+	    </ExpandableListView>
+	    	
+	    <TextView
+	        android:id="@+id/cadastro_consulta_tvObservacoes"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:text="@string/Observations"
+	        android:textAppearance="?android:attr/textAppearanceMedium" />
+	
+	    <EditText
+	        android:id="@+id/editText1"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:ems="10"
+	        android:inputType="textMultiLine" >
+	    </EditText>
+	   	
+	</LinearLayout>
+</ScrollView>

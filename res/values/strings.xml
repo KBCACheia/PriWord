@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">PriWord</string>
+    <string name="action_settings">Settings</string>
+    <string name="Search">Pesquise&#8230;</string>
+    <string name="Part_of_Speach">Classes Gramaticais:</string>
+    <string name="Select_Part_of_Speach">Click para selecionar as classes</string>
+    <string name="Type_word">Digite a palavra</string>
+    <string name="Observations">Observações:</string>
+    <string name="Add_examples">Adicionar Exemplos</string>
+    <string name="Type_an_example">Digite um exemplo</string>
+    <string name="example">Exemplos:</string>
+    <string name="ok">OK</string>
+
+</resources>
