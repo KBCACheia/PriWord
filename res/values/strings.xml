@@ -10,7 +10,18 @@
     <string name="Observations">Observações:</string>
     <string name="Add_examples">Adicionar Exemplos</string>
     <string name="Type_an_example">Digite um exemplo</string>
-    <string name="example">Exemplos:</string>
-    <string name="ok">OK</string>
+    <string name="Example">Exemplos:</string>
+    <string name="OK">OK</string>
+    <string name="Definition">Definição:</string>
+    <string name="Meaning_the_Word">Defina a palavra!</string>
+    <string name="Group">Grupos:</string>
+    <string name="Select_Group">Click para selecionar os grupos</string>
+    <string name="Verb_Form">Formas do Verbo:</string>
+    <string name="Irregular">Irregular</string>
+    <string name="Past_Form">Past Form:</string>
+    <string name="Past_Participle">Past  Participle:</string>
+    <string name="action_add">Adicionar</string>
+    <string name="action_edit">Editar</string>
+    <string name="action_save">Salvar</string>
 
 </resources>

@@ -1,39 +1,132 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-	    xmlns:tools="http://schemas.android.com/tools"
-	    android:layout_width="fill_parent"
-	    android:layout_height="fill_parent" >
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
 	<LinearLayout 
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:orientation="vertical" >
+	   
 	
 	    <EditText
 	        android:id="@+id/cadastro_consulta_etPalavra"
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
+	        android:singleLine="true"
 	        android:gravity="center"
+	        android:textSize="25sp"
 	        android:hint="@string/Type_word" />
+
+	    <TextView
+	        android:id="@+id/cadastro_consulta_tvDefinicao"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:text="@string/Definition"
+	        android:textAppearance="?android:attr/textAppearanceLarge" />
+	     
+
+	    <EditText
+	        android:id="@+id/cadastro_consulta_etDefinicao"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:ems="10"
+	        android:hint="@string/Meaning_the_Word"
+	        android:inputType="textMultiLine" >
+	    </EditText>
 	
 	    <TextView
 	        android:id="@+id/cadastro_consulta_tvClassesGramaticais"
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:text="@string/Part_of_Speach"
-	        android:textAppearance="?android:attr/textAppearanceMedium" />
+	        android:textAppearance="?android:attr/textAppearanceLarge" />
 	
 	    <EditText
 	        android:id="@+id/cadastro_consulta_etClasses"
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:focusable="false"
-	        android:gravity="center"
-	        android:hint="@string/Select_Part_of_Speach" />
+	        android:hint="@string/Select_Part_of_Speach"
+	        android:drawableRight="@android:drawable/ic_menu_agenda" />
+
+	    <CheckBox
+	        android:id="@+id/cadastro_consulta_cbIrregular"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:text="@string/Irregular" />
+
+	    <TextView
+	        android:id="@+id/cadastro_consulta_tvFormaVerbos"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:text="@string/Verb_Form"
+	        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+	    <LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content" >
+
+	        <TextView
+	            android:id="@+id/cadastro_consulta_tvPastForm"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="@string/Past_Form"
+	            android:textAppearance="?android:attr/textAppearanceMedium" />
+	        <EditText
+	            android:id="@+id/cadastro_consulta_etPastForm"
+	            android:layout_width="0dp"
+	            android:layout_height="wrap_content"
+	            android:layout_weight="1"
+	            android:singleLine="true"
+	            android:hint=""
+	            android:ems="10" />
+
+	    </LinearLayout>
+	    <LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content" >
+
+	        <TextView
+	            android:id="@+id/cadastro_consulta_tvPastParticiple"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="@string/Past_Participle"
+	            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	        <EditText
+	            android:id="@+id/cadastro_consulta_etPastParticiple"
+	            android:layout_width="0dp"
+	            android:layout_height="wrap_content"
+	            android:singleLine="true"
+	            android:layout_weight="1"
+	            android:hint=""
+	            android:ems="10" />
+
+	    </LinearLayout>
+
+	    <TextView
+	        android:id="@+id/cadastro_consulta_tvGrupos"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:text="@string/Group"
+	        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+	    <EditText
+	        android:id="@+id/cadastro_consulta_etGrupos"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:focusable="false"
+	        android:hint="@string/Select_Group"
+	        android:drawableRight="@android:drawable/ic_menu_agenda"
+	        android:ems="10" />
+
 		<TextView
 	        android:id="@+id/cadastro_consulta_tvTextoExemplo"
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
-	        android:text="@string/example"
-	        android:textAppearance="?android:attr/textAppearanceMedium" />
+	        android:text="@string/Example"
+	        android:textAppearance="?android:attr/textAppearanceLarge" />
 		<LinearLayout
 		    android:layout_width="fill_parent"
 		    android:layout_height="wrap_content"
@@ -47,37 +140,18 @@
 		        android:layout_weight="1.03"
 		        android:hint="@string/Type_an_example" >
 		    </EditText>
-
 		    <Button
 		        android:id="@+id/cadastro_consulta_btAddExemplo"
 		        style="?android:attr/buttonStyleSmall"
 		        android:layout_width="50dp"
 		        android:layout_height="wrap_content"
-		        android:text="@string/ok"
+		        android:text="@string/OK"
 		         />
 		</LinearLayout>
-	    
-	    <ExpandableListView
-	        android:id="@+id/cadastro_consulta_elvExemplosClasses" 
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content">
-	        
-	    </ExpandableListView>
-	    	
-	    <TextView
-	        android:id="@+id/cadastro_consulta_tvObservacoes"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:text="@string/Observations"
-	        android:textAppearance="?android:attr/textAppearanceMedium" />
-	
-	    <EditText
-	        android:id="@+id/editText1"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:ems="10"
-	        android:inputType="textMultiLine" >
-	    </EditText>
-	   	
+		<ListView 
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:id="@+id/cadastro_consulta_lvExemplos">
+		</ListView>   	
 	</LinearLayout>
 </ScrollView>
