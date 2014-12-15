@@ -22,9 +22,10 @@
 	        android:id="@+id/cadastro_consulta_tvDefinicao"
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
+	        android:background="#806B8E23"
 	        android:text="@string/Definition"
-	        android:textAppearance="?android:attr/textAppearanceLarge" />
-	     
+	        android:textAppearance="?android:attr/textAppearanceLarge"
+	        android:textColor="@color/hint_foreground_material_light" />
 
 	    <EditText
 	        android:id="@+id/cadastro_consulta_etDefinicao"
@@ -39,8 +40,10 @@
 	        android:id="@+id/cadastro_consulta_tvClassesGramaticais"
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
+	        android:background="#806B8E23"
 	        android:text="@string/Part_of_Speach"
-	        android:textAppearance="?android:attr/textAppearanceLarge" />
+	        android:textAppearance="?android:attr/textAppearanceLarge"
+	        android:textColor="@color/hint_foreground_material_light" />
 	
 	    <EditText
 	        android:id="@+id/cadastro_consulta_etClasses"
@@ -60,8 +63,10 @@
 	        android:id="@+id/cadastro_consulta_tvFormaVerbos"
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
+	        android:background="#806B8E23"
 	        android:text="@string/Verb_Form"
-	        android:textAppearance="?android:attr/textAppearanceLarge" />
+	        android:textAppearance="?android:attr/textAppearanceLarge"
+	        android:textColor="@color/hint_foreground_material_light" />
 
 	    <LinearLayout
 	        android:layout_width="match_parent"
@@ -109,8 +114,10 @@
 	        android:id="@+id/cadastro_consulta_tvGrupos"
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
+	        android:background="#806B8E23"
 	        android:text="@string/Group"
-	        android:textAppearance="?android:attr/textAppearanceLarge" />
+	        android:textAppearance="?android:attr/textAppearanceLarge"
+	        android:textColor="@color/hint_foreground_material_light" />
 
 	    <EditText
 	        android:id="@+id/cadastro_consulta_etGrupos"
@@ -120,13 +127,31 @@
 	        android:hint="@string/Select_Group"
 	        android:drawableRight="@android:drawable/ic_menu_agenda"
 	        android:ems="10" />
-
-		<TextView
-	        android:id="@+id/cadastro_consulta_tvTextoExemplo"
+	    <TextView
+	        android:id="@+id/cadastro_consulta_tvTraducao"
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
-	        android:text="@string/Example"
-	        android:textAppearance="?android:attr/textAppearanceLarge" />
+	        android:background="#806B8E23"
+	        android:text="@string/Translation"
+	        android:textAppearance="?android:attr/textAppearanceLarge"
+	        android:textColor="@color/hint_foreground_material_light" />
+
+	    <EditText
+	        android:id="@+id/cadastro_consulta_etTraducao"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:hint="@string/Type_translation"
+	        android:ems="10" />
+
+		<TextView
+		    android:id="@+id/cadastro_consulta_tvTextoExemplo"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:background="#806B8E23"
+		    android:text="@string/Example"
+		    android:textAppearance="?android:attr/textAppearanceLarge"
+		    android:textColor="@color/hint_foreground_material_light" />
+
 		<LinearLayout
 		    android:layout_width="fill_parent"
 		    android:layout_height="wrap_content"

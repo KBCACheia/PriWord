@@ -23,5 +23,8 @@
     <string name="action_add">Adicionar</string>
     <string name="action_edit">Editar</string>
     <string name="action_save">Salvar</string>
+    <string name="Translation">Tradução:</string>
+    <string name="Type_translation">Digite a(s) Tradução (s)</string>
+    <string name="action_cancel">Cancelar</string>
 
 </resources>

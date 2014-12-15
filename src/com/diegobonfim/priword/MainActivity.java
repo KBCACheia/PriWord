@@ -29,9 +29,9 @@ public class MainActivity extends ActionBarActivity {
 	ArrayList<ArrayList<String>> arrayListaPalavras;
 	SQLiteDatabase bancoDados = null;
 	String tabelaPalavras = "palavras";
-	String[] camposTabelaPalavras = new String[]{"idPalava", "palavra", "definicao", "classes", "formaVerbo"};
+	String[] camposTabelaPalavras = new String[]{"idPalava", "palavra", "definicao", "classes", "traducao", "irregular", "pastform", "pastparticiple"};
 	String tabelaGruposPalavras = "grupos_palavras";
-	String[] camposTabelaGruposPalavras = new String[]{"grupoID", "PalavraID"};
+	String[] camposTabelaGruposPalavras = new String[]{"grupoNome", "PalavraNome"};
 	String tabelaGrupos = "grupos";
 	String[] camposTabelaGrupos = new String[]{"idGrupos", "grupo"};
 	String tabelaFrases = "frases";
@@ -48,7 +48,6 @@ public class MainActivity extends ActionBarActivity {
 		listaPalavras = (ListView) findViewById(R.id.home_lvPalavras);
 		//deleteDatabase(nomeBanco);
 		abreouCriaBanco();
-		//insereRegistro();
 		buscarDados();
 		listener();
 		criarLista();
@@ -64,11 +63,14 @@ public class MainActivity extends ActionBarActivity {
 					   " palavra TEXT," +
 					   " definicao TEXT," +
 					   " classes TEXT," +
-					   " formaVerbo TEXT);";
+					   " traducao TEXT," +
+					   " irregular TEXT," +
+					   " pastform TEXT," +
+					   " pastparticiple TEXT);";
 			   bancoDados.execSQL(palavra);
 			   String grupo_palavra = "CREATE TABLE IF NOT EXISTS "+tabelaGruposPalavras+
-					   "(grupoID INTEGER," +
-					   " PalavraID INTEGER);";
+					   "(grupoNome TEXT," +
+					   " PalavraNome TEXT);";
 			   bancoDados.execSQL(grupo_palavra);
 			   String grupos = "CREATE TABLE IF NOT EXISTS "+tabelaGrupos+
 					   "(idGrupos INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -118,20 +120,6 @@ public class MainActivity extends ActionBarActivity {
 		   } catch(Exception erro) {
 			     Toast.makeText(MainActivity.this, "Erro buscar dados no banco: "+erro.getMessage(), Toast.LENGTH_LONG).show();	    
 			     return false;
-		   }
-	}
-
-	
-
-	public void insereRegistro() {
-		   try {
-			   String sql="INSERT INTO palavras (palavra, definicao, classes, formaVerbo) values ('Palavra Teste',"
-					   	+"'Definicao Teste', 'Classes Teste', '')";		   
-			   bancoDados.execSQL(sql);			   		   
-		   }
-		   catch(Exception erro) {
-			   Toast.makeText(MainActivity.this, "Erro ao gravar dados no banco: "+erro.getMessage(), Toast.LENGTH_LONG).show();
-			  
 		   }
 	}
 
@@ -193,6 +181,8 @@ public class MainActivity extends ActionBarActivity {
 		edit.setVisible(false);
 		MenuItem save = menu.findItem(R.id.menu_save);
 		save.setVisible(false);
+		MenuItem cancel = menu.findItem(R.id.menu_cancel);
+		cancel.setVisible(false);
 		return super.onCreateOptionsMenu(menu);
 	}
 

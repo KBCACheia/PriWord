@@ -35,24 +35,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-public class CadastroConsulta extends ActionBarActivity{
+public class CadastroConsulta_sem_Pojo extends ActionBarActivity{
 	
 	ArrayList<Integer> classesSelecionadas = new ArrayList<Integer>();
-	ArrayList<Integer> gruposSelecionados = new ArrayList<Integer>();
 	ArrayList<String> classesSelecionadasAntes = null;
 	ArrayList<String> classesExemplos = new ArrayList<String>();
-	
-	ArrayList<Palavras> palavras = new ArrayList<Palavras>();
-	ArrayList<GruposPalavras> gruposPalavras = new ArrayList<GruposPalavras>();
-	ArrayList<Grupos> grupos = new ArrayList<Grupos>();
-	ArrayList<Frases> frases = new ArrayList<Frases>();
 	
 	MenuItem add, save, edit, cancel;
 	
 	SQLiteDatabase bancoDados = null;
 	Cursor cursorPalavras, cursorGrupos, cursorGruposPalavras, cursorFrases;
 	String nomeBanco = "vocabulario.db";
-	String tabelaPalavras = "palavras"; 
+	String tabelaPalavras = "palavras";
 	String[] camposTabelaPalavras = new String[]{"idPalava", "palavra", "definicao", "classes", "traducao", "irregular", "pastform", "pastparticiple"};
 	int idPalava=-1;
 	String tabelaGruposPalavras = "grupos_palavras";
@@ -62,7 +56,6 @@ public class CadastroConsulta extends ActionBarActivity{
 	String tabelaFrases = "frases";
 	String[] camposTabelaFrases = new String[]{"idFrases", "frases", "palavraID"};
 	
-	EditText etNovoGrupo;
 	
 	EditText etCadastroConsultaClasses, etCadastroConsultaPalavras, etCadastroConsultaAddExemplo, 
 				etCadastroConsultaDefinicao, etCadastroConsultaTraducao, etCadastroConsultaGrupo, etCadastroConsultaPastForm, 
@@ -75,7 +68,7 @@ public class CadastroConsulta extends ActionBarActivity{
 	boolean[] classesDefinidasBoolean = null;
 	String palavraSelecionada ="";
 	String[] classesExemplosString = null;
-	String[] gruposCadastrados = null;
+	String[][]	frasesExemplosString = null;
 	String[] classesGramaticais = new String[] {"Adjective", "Adverb", "Article", "Conjunction", "Interjection", "Noun"
 			, "Number",	"Phrasal Verb", "Postposition", "Preosition", "Pronoun", "Substantive",	"Verb"};
 	
@@ -135,18 +128,18 @@ public class CadastroConsulta extends ActionBarActivity{
 	
 	private void preencherTodaView(String palavra) {
 		buscarDados();
-		for (Palavras word : palavras){
-			if (word.palavra.equals(palavra)){
+		for (int i=0; i < cursorPalavras.getCount(); i++){
+			if (cursorPalavras.getString(1).toString().equals(palavra)){
 				etCadastroConsultaPalavras.setText(palavra);
-				idPalava = word.idPalava;
-				etCadastroConsultaDefinicao.setText(word.definicao);
-				etCadastroConsultaClasses.setText(word.classes);
-				etCadastroConsultaTraducao.setText(word.traducao);
-				if (word.classes.contains("Verb")){
-					cbCadastroConsultaIrregular.setChecked(Boolean.valueOf(word.irregular));
+				idPalava = cursorPalavras.getInt(cursorPalavras.getColumnIndex("idPalava"));
+				etCadastroConsultaDefinicao.setText(cursorPalavras.getString(cursorPalavras.getColumnIndex("definicao")));
+				etCadastroConsultaClasses.setText(cursorPalavras.getString(cursorPalavras.getColumnIndex("classes")));
+				etCadastroConsultaTraducao.setText(cursorPalavras.getString(cursorPalavras.getColumnIndex("traducao")));
+				if (cursorPalavras.getString(cursorPalavras.getColumnIndex("classes")).contains("Verb")){
+					cbCadastroConsultaIrregular.setChecked(Boolean.valueOf(cursorPalavras.getString(cursorPalavras.getColumnIndex("irregular"))));
 					cbCadastroConsultaIrregular.setVisibility(android.view.View.VISIBLE);
-					etCadastroConsultaPastForm.setText(word.pastform);
-					etCadastroConsultaPastParticiple.setText(word.pastparticiple);
+					etCadastroConsultaPastForm.setText(cursorPalavras.getString(cursorPalavras.getColumnIndex("pastform")));
+					etCadastroConsultaPastParticiple.setText(cursorPalavras.getString(cursorPalavras.getColumnIndex("pastparticiple")));
 					etCadastroConsultaPastForm.setVisibility(android.view.View.VISIBLE);
 					etCadastroConsultaPastParticiple.setVisibility(android.view.View.VISIBLE);
 					tvCadastroConsultaFormaVerbos.setVisibility(android.view.View.VISIBLE);
@@ -154,100 +147,53 @@ public class CadastroConsulta extends ActionBarActivity{
 					tvCadastroConsultaPastParticiple.setVisibility(android.view.View.VISIBLE);
 
 				}
-				String textoGrupo = "";
-				for (GruposPalavras groupWord : gruposPalavras){
-					if (groupWord.palavraNome.equals(palavra)){
-						textoGrupo += groupWord.grupoNome +", ";
-					}
-				}
-				if (textoGrupo.length()>1)
-					textoGrupo = textoGrupo.substring(0, textoGrupo.length()-2);	
-				etCadastroConsultaGrupo.setText(textoGrupo);
-				classesExemplos.clear();
-				for (Frases frasesToClasseExemplo : frases){
-					if (frasesToClasseExemplo.palavrasID == idPalava){
-						classesExemplos.add(frasesToClasseExemplo.frases);
-					}
-				}
-				criarListaExemplo();
+				//OBSERVAÇÂO
+				//etCadastroConsultaGrupo.setText(cursorPalavras.getString(cursorPalavras.getColumnIndex("grupoID")));
+				//OBSERVAÇÃO
+			/*	classesExemplos.clear();
+				classesExemplos = new ArrayList<String>
+				(Arrays.asList(cursorPalavras.getString(cursorPalavras.getColumnIndex("frases")).split("#$")));				
+				criarLista();*/
 				break;
 			}				
+			cursorPalavras.moveToNext();
 		}
 		desabilitarCampos();
 	}
 
 	private void buscarDados() {
 		try {
-		   //Carrega dados da tabela tabelaPalavras
-		   cursorPalavras = bancoDados.query(tabelaPalavras, camposTabelaPalavras, 
-				   null,//selection, 
-				   null,//selectionArgs, 
-				   null,//groupBy, 
-				   null,//having, 
-				   null,//"order by palavra"//orderBy)
-				   null); // Limite de registros retornados	
-		   if (cursorPalavras.getCount() > 0){
-			   cursorPalavras.moveToFirst();
-			   palavras.clear();
-			   do {
-				   Palavras palavra = new Palavras();
-				   palavra.idPalava = cursorPalavras.getInt(cursorPalavras.getColumnIndex("idPalava"));
-				   palavra.palavra = cursorPalavras.getString(cursorPalavras.getColumnIndex("palavra"));
-				   palavra.definicao = cursorPalavras.getString(cursorPalavras.getColumnIndex("definicao"));
-				   palavra.classes = cursorPalavras.getString(cursorPalavras.getColumnIndex("classes"));
-				   palavra.traducao = cursorPalavras.getString(cursorPalavras.getColumnIndex("traducao"));
-				   palavra.irregular = cursorPalavras.getString(cursorPalavras.getColumnIndex("irregular"));
-				   palavra.pastform = cursorPalavras.getString(cursorPalavras.getColumnIndex("pastform"));
-				   palavra.pastparticiple = cursorPalavras.getString(cursorPalavras.getColumnIndex("pastparticiple"));
-				   palavras.add(palavra);
-			   } while (cursorPalavras.moveToNext());
-		   }
-		 //Carrega dados da tabela tabelaGrupos
-		   cursorGrupos = bancoDados.query(tabelaGrupos, camposTabelaGrupos, 
-				   null, null, null, null, null, null);
-		   if (cursorGrupos.getCount() > 0){
-			   cursorGrupos.moveToFirst();
-			   grupos.clear();
-			   do {
-				   Grupos grupo = new Grupos();
-				   grupo.idGrupos = cursorGrupos.getInt(cursorGrupos.getColumnIndex("idGrupos"));
-				   grupo.grupo = cursorGrupos.getString(cursorGrupos.getColumnIndex("grupo"));
-				   grupos.add(grupo);
-			   } while (cursorGrupos.moveToNext());
-		   }
-		 //Carrega dados da tabela tabelaGruposPalavras
-		   cursorGruposPalavras = bancoDados.query(tabelaGruposPalavras, camposTabelaGruposPalavras, 
-				   null, null, null, null, null, null);
-		   if (cursorGruposPalavras.getCount() > 0){
-			   cursorGruposPalavras.moveToFirst();
-			   gruposPalavras.clear();
-			   do {
-				   GruposPalavras grupoPalavra = new GruposPalavras();
-				   grupoPalavra.grupoNome = cursorGruposPalavras.getString(cursorGruposPalavras.getColumnIndex("grupoNome"));
-				   grupoPalavra.palavraNome = cursorGruposPalavras.getString(cursorGruposPalavras.getColumnIndex("PalavraNome"));
-				   gruposPalavras.add(grupoPalavra);
-			   } while (cursorGruposPalavras.moveToNext());
-		   }
-		 //Carrega dados da tabela tabelaFrases
-		   cursorFrases = bancoDados.query(tabelaFrases, camposTabelaFrases, 
-				   null, null, null, null, null, null);
-		   if (cursorFrases.getCount() > 0){
-			   cursorFrases.moveToFirst();
-			   frases.clear();
-			   do {
-				   Frases frase = new Frases();
-				   frase.idFrases = cursorFrases.getInt(cursorFrases.getColumnIndex("idFrases"));
-				   frase.frases = cursorFrases.getString(cursorFrases.getColumnIndex("frases"));
-				   frase.palavrasID = cursorFrases.getInt(cursorFrases.getColumnIndex("palavraID"));
-				   frases.add(frase);
-			   } while (cursorFrases.moveToNext());
-		   }
+			   cursorPalavras = bancoDados.query(tabelaPalavras, camposTabelaPalavras, 
+					   null,//selection, 
+					   null,//selectionArgs, 
+					   null,//groupBy, 
+					   null,//having, 
+					   null,//"order by palavra"//orderBy)
+					   null); // Limite de registros retornados	
+			   if (cursorPalavras.getCount() > 0){
+				   cursorPalavras.moveToFirst();
+			   }
+			   cursorGrupos = bancoDados.query(tabelaGrupos, camposTabelaGrupos, 
+					   null, null, null, null, null, null);
+			   if (cursorGrupos.getCount() > 0){
+				   cursorGrupos.moveToFirst();
+			   }
+			   cursorGruposPalavras = bancoDados.query(tabelaGruposPalavras, camposTabelaGruposPalavras, 
+					   null, null, null, null, null, null);
+			   if (cursorGruposPalavras.getCount() > 0){
+				   cursorGruposPalavras.moveToFirst();
+			   }
+			   cursorFrases = bancoDados.query(tabelaFrases, camposTabelaFrases, 
+					   null, null, null, null, null, null);
+			   if (cursorFrases.getCount() > 0){
+				   cursorFrases.moveToFirst();
+			   }
 			  
 			   
-	   } catch(Exception erro) {
-		     Toast.makeText(CadastroConsulta.this, "Erro buscar dados no banco: "+erro.getMessage(), Toast.LENGTH_LONG).show();	    
-		     //return false;
-	   }
+		   } catch(Exception erro) {
+			     Toast.makeText(CadastroConsulta_sem_Pojo.this, "Erro buscar dados no banco: "+erro.getMessage(), Toast.LENGTH_LONG).show();	    
+			     //return false;
+		   }
 		
 	}
 
@@ -280,29 +226,25 @@ public class CadastroConsulta extends ActionBarActivity{
 			
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
+				// TODO Auto-generated method stub
 				if (!hasFocus){
 					buscarDados();
-					for (Palavras word : palavras){
-						if(!atualizando){
-							if (word.palavra.toLowerCase(Locale.ENGLISH).contains(etCadastroConsultaPalavras.getText().toString().toLowerCase(Locale.ENGLISH))){
-								etCadastroConsultaPalavras.setError("Palavra ja cadastrada!");
-								etCadastroConsultaPalavras.setTextColor(Color.RED);
-								erroPalavra=true;
-							}  else {
-								erroPalavra=false;
-								etCadastroConsultaPalavras.setTextColor(Color.BLACK);
-							}
-						} else {
-							if (!etCadastroConsultaPalavras.getText().toString().toLowerCase(Locale.ENGLISH).equals(palavraSelecionada.toLowerCase(Locale.ENGLISH))){
-								etCadastroConsultaPalavras.setError("Palavra ja cadastrada!");
-								etCadastroConsultaPalavras.setTextColor(Color.RED);
-								erroPalavra=true;
-							}  else {
-								erroPalavra=false;
-								etCadastroConsultaPalavras.setTextColor(Color.BLACK);
-							}
+					ArrayList<String> palavrasCadastradas = new ArrayList<String>();
+					for (int i=0; i < cursorPalavras.getCount(); i++){
+						palavrasCadastradas.add(cursorPalavras.getString(cursorPalavras.getColumnIndex("palavra")).toLowerCase(Locale.ENGLISH));
+						cursorPalavras.moveToNext();
+					}
+					if(!atualizando){
+						if (palavrasCadastradas.contains(etCadastroConsultaPalavras.getText().toString().toLowerCase(Locale.ENGLISH))){
+							etCadastroConsultaPalavras.setError("Palavra ja cadastrada!");
+							etCadastroConsultaPalavras.setTextColor(Color.RED);
+							erroPalavra=true;
+						}  else {
+							erroPalavra=false;
+							etCadastroConsultaPalavras.setTextColor(Color.BLACK);
 						}
 					}
+					cursorPalavras.moveToFirst();
 				}
 				
 			}
@@ -333,89 +275,20 @@ public class CadastroConsulta extends ActionBarActivity{
 			
 			@Override
 			public void onClick(View v) {
-				buscarDados();			
-				gruposSelecionados.clear();
-				AlertDialog.Builder opcoes = new AlertDialog.Builder(CadastroConsulta.this);
+				
+				AlertDialog.Builder opcoes = new AlertDialog.Builder(CadastroConsulta_sem_Pojo.this);
 				opcoes.setTitle("Selecione o(s) Grupo(s)!");
-				gruposCadastrados = new String[grupos.size()];
-				int z = 0;
-				for (Grupos group : grupos){
-					gruposCadastrados[z] = group.grupo;
-					z++;
-				}
 				
-				boolean[] gruposBoolean = new boolean[classesGramaticais.length]; // Cria o array booleano para passar ao contrutor do popupClasses.setMultiChoiceItems
-				String gruposDefinidosNome = etCadastroConsultaGrupo.getText().toString();
-				if (!etCadastroConsultaGrupo.equals("")){ //Se o Edit Text Estiver vazio não precisa montar array booleano 
-					ArrayList<String> gruposSelecionadosAntes = new ArrayList<String>
-														(Arrays.asList(gruposDefinidosNome.split(", ")));
-						for (int j=0; j < gruposCadastrados.length;j++){
-							gruposBoolean[j] = false;	
-							for (int i=0; i < gruposSelecionadosAntes.size();i++){	
-								if (gruposSelecionadosAntes.get(i).equals(gruposCadastrados[j])){
-									gruposBoolean[j] = true; // Define true as classes presentes para marcar o checkbox
-									gruposSelecionados.add(j);
-								}
-							}
-						}
-				}
-				
-				opcoes.setMultiChoiceItems(gruposCadastrados, gruposBoolean, new OnMultiChoiceClickListener() {
-					
-					@Override
-					public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-						if (isChecked) {
-		                    gruposSelecionados.add(which);
-		                 } else if (gruposSelecionados.contains(which)) { 
-		                	 gruposSelecionados.remove(Integer.valueOf(which));	        	         
-		                 }
-					}
-				});
-				opcoes.setPositiveButton("Novo", new DialogInterface.OnClickListener() {
+				/*opcoes.setView(et);
+				opcoes.setMultiChoiceItems(items, checkedItems, listener)*/
+				opcoes.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 					
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						AlertDialog.Builder novoGrupo = new AlertDialog.Builder(CadastroConsulta.this);
-						novoGrupo.setTitle("Digite o nome do Grupo.");
-						etNovoGrupo = new EditText(CadastroConsulta.this);
-						etNovoGrupo.setHint("Digite o Nome do grupos");
-						novoGrupo.setView(etNovoGrupo);
-						novoGrupo.setPositiveButton("Ok", new DialogInterface.OnClickListener(){
-
-							@Override
-							public void onClick(DialogInterface dialog, int which) {
-								boolean err=false;
-								for (Grupos gp : grupos){
-									if (gp.grupo.toLowerCase(Locale.ENGLISH).equals(etNovoGrupo.getText().toString().toLowerCase(Locale.ENGLISH))){
-										Toast.makeText(CadastroConsulta.this, "ERRO! \nO Grupo já existe!", Toast.LENGTH_SHORT).show();
-									    err = true;
-									}
-								}
-								if (!err){
-									gravarGrupos(etNovoGrupo.getText().toString());	
-									buscarDados();
-								}
-							}
-						});
-						novoGrupo.setNegativeButton("Cancelar", new DialogInterface.OnClickListener(){
-
-							@Override
-							public void onClick(DialogInterface dialog, int which) {
-								dialog.cancel();	
-							}
-						});
-						novoGrupo.show();
-						dialog.cancel();
+						
 					}
 				});
-				opcoes.setNegativeButton("Ok", new DialogInterface.OnClickListener(){
-
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						preencheEditTextGrupos(gruposCadastrados, gruposSelecionados);							
-					}
-				});
-				opcoes.setNeutralButton("Cancelar", new DialogInterface.OnClickListener(){
+				opcoes.setNegativeButton("Cancelar", new DialogInterface.OnClickListener(){
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
@@ -450,13 +323,13 @@ public class CadastroConsulta extends ActionBarActivity{
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 					final int posicao = position;
-					AlertDialog.Builder opcoes = new AlertDialog.Builder(CadastroConsulta.this);
+					AlertDialog.Builder opcoes = new AlertDialog.Builder(CadastroConsulta_sem_Pojo.this);
 					opcoes.setTitle("Edite a Frase?");
-					opcoes.setMessage("Se quiser APAGAR o item basta clickar na frase e segurar.");
+					opcoes.setMessage("Se quiser APAGAR o item basta clickar e segurar.");
 					
-					final EditText et = new EditText(CadastroConsulta.this);
+					final EditText et = new EditText(CadastroConsulta_sem_Pojo.this);
 					String frase = classesExemplos.get(position).toString();
-					final ArrayList<String> classeFrase = new ArrayList<String>
+					ArrayList<String> classeFrase = new ArrayList<String>
 					(Arrays.asList(frase.split(": \n")));
 					et.setText(classeFrase.get(1).toString());
 					
@@ -465,14 +338,14 @@ public class CadastroConsulta extends ActionBarActivity{
 						
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
-							if (!et.getText().toString().equals("")){
+							if (!et.getText().toString().equals("")){								
 								classesExemplos.remove(posicao);
-								classesExemplos.add(classeFrase.get(0).toString()+": \n"
+								classesExemplos.add(classesSelecionadasAntes.get(posicao)+": \n"
 										+et.getText().toString());
-								criarListaExemplo();								
-								Toast.makeText(CadastroConsulta.this, "Exemplo editado com sucesso!", Toast.LENGTH_SHORT).show();
+								criarListaExemplo();
+								Toast.makeText(CadastroConsulta_sem_Pojo.this, "Exemplo editado com sucesso!", Toast.LENGTH_SHORT).show();
 							} else {
-								Toast.makeText(CadastroConsulta.this, "Nenhum Exemplo modificado. Campo não pode ficar vazio!", Toast.LENGTH_SHORT).show();
+								Toast.makeText(CadastroConsulta_sem_Pojo.this, "Nenhum Exemplo modificado. Campo não pode ficar vazio!", Toast.LENGTH_SHORT).show();
 							}
 						}
 					});
@@ -492,7 +365,7 @@ public class CadastroConsulta extends ActionBarActivity{
 			public boolean onItemLongClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				final int posicao2 = position;
-				AlertDialog.Builder opcoes = new AlertDialog.Builder(CadastroConsulta.this);
+				AlertDialog.Builder opcoes = new AlertDialog.Builder(CadastroConsulta_sem_Pojo.this);
 				opcoes.setTitle("Deseja apagar o item?");
 				opcoes.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
 					
@@ -500,7 +373,7 @@ public class CadastroConsulta extends ActionBarActivity{
 					public void onClick(DialogInterface dialog, int which) {
 						classesExemplos.remove(posicao2);
 						criarListaExemplo();
-						Toast.makeText(CadastroConsulta.this, "Exemplo removido com sucesso!", Toast.LENGTH_SHORT).show();
+						Toast.makeText(CadastroConsulta_sem_Pojo.this, "Exemplo removido com sucesso!", Toast.LENGTH_SHORT).show();
 					}
 				});
 				opcoes.setNegativeButton("Não", new DialogInterface.OnClickListener(){
@@ -514,20 +387,6 @@ public class CadastroConsulta extends ActionBarActivity{
 				return true;
 			}
 		});
-	}
-	
-	private void preencheEditTextGrupos(String[]items, ArrayList<Integer> classes){
-		String gruposFinal="";
-		Collections.sort(classes);
-		if (!classes.isEmpty()){
-			for (int i=0; i < classes.size();i++){ //Monta String pro EditText
-				gruposFinal += items[Integer.valueOf(classes.get(i))];
-				gruposFinal +=", ";
-			}
-		} else {
-			gruposFinal +=", ";
-		}
-		etCadastroConsultaGrupo.setText(gruposFinal.substring(0, gruposFinal.length()-2));
 	}
 
 	private void preencheEditTextClasses(ArrayList<Integer> classes){
@@ -549,7 +408,7 @@ public class CadastroConsulta extends ActionBarActivity{
 	}
 	
 	private void abrePopupClasse(String titulo, String[] classes, boolean[] marcados, final String qual) {// Cria popup de opções de classes e exemplos
-		AlertDialog.Builder popupClasses = new AlertDialog.Builder(CadastroConsulta.this); 
+		AlertDialog.Builder popupClasses = new AlertDialog.Builder(CadastroConsulta_sem_Pojo.this); 
 		popupClasses.setTitle(titulo);
 		popupClasses.setMultiChoiceItems(classes, marcados, 
 				new OnMultiChoiceClickListener() {					
@@ -607,17 +466,12 @@ public class CadastroConsulta extends ActionBarActivity{
 	
 	private void criaCamposExemplo(ArrayList<Integer> classes) { //Monta a lista dos Exemplos.
 		if (!classes.isEmpty()){
-			String addFrase = classesSelecionadasAntes.get(classes.get(0))+": \n"
-					+etCadastroConsultaAddExemplo.getText().toString();
-			if (!classesExemplos.contains(addFrase)){
-				classesExemplos.add(addFrase);
-				criarListaExemplo();
-				etCadastroConsultaAddExemplo.setText("");
-				Toast.makeText(CadastroConsulta.this, "Exemplo adicionado com sucesso!", Toast.LENGTH_SHORT).show();
-			} else {
-				Toast.makeText(CadastroConsulta.this, "A Frase Já Existe", Toast.LENGTH_SHORT).show();
-				etCadastroConsultaAddExemplo.requestFocus();
-			}
+			
+			classesExemplos.add(classesSelecionadasAntes.get(classes.get(0))+": \n"
+								+etCadastroConsultaAddExemplo.getText().toString());	
+			criarListaExemplo();
+			etCadastroConsultaAddExemplo.setText("");
+			Toast.makeText(CadastroConsulta_sem_Pojo.this, "Exemplo adicionado com sucesso!", Toast.LENGTH_SHORT).show();
 		}	
 	}
 	
@@ -643,7 +497,7 @@ public class CadastroConsulta extends ActionBarActivity{
         ViewGroup.LayoutParams params = myListView.getLayoutParams();
         params.height = totalHeight + (myListView.getDividerHeight() * (myListAdapter.getCount() - 1));
         myListView.setLayoutParams(params);
-        //Log.i("height of listItem:", String.valueOf(totalHeight));
+        Log.i("height of listItem:", String.valueOf(totalHeight));
     }
     
     public void abreouCriaBanco() {
@@ -657,9 +511,9 @@ public class CadastroConsulta extends ActionBarActivity{
 		   }
 	}
     
-    public boolean gravarPalavras(){
+    public void gravarDados(){
     	try {
-			   String sqlPalavra="INSERT INTO "+tabelaPalavras+" (palavra, definicao, classes, traducao, irregular, pastform, pastparticiple) values ('"+
+			   String sqlPalavra="INSERT INTO palavras (palavra, definicao, classes, traducao, irregular, pastform, pastparticiple) values ('"+
 					   		etCadastroConsultaPalavras.getText().toString()+
 					   		"', '"+etCadastroConsultaDefinicao.getText().toString()+
 					   		"', '"+etCadastroConsultaClasses.getText().toString()+
@@ -668,132 +522,30 @@ public class CadastroConsulta extends ActionBarActivity{
 					   		"', '"+etCadastroConsultaPastForm.getText().toString()+
 					   		"', '"+etCadastroConsultaPastParticiple.getText().toString()+"')";		   
 			   bancoDados.execSQL(sqlPalavra);	
-			   Log.i("Sucesso: ", "Dados Gravados com Sucesso!");
-			   return true;
+			   Toast.makeText(CadastroConsulta_sem_Pojo.this, "Dados Gravados com Sucesso!", Toast.LENGTH_LONG).show();
 		 } catch(Exception erro) {
-			 Log.i("Erro: ", "Erro ao gravar dados no banco: "+erro.getMessage());
-			 return false;
+			   Toast.makeText(CadastroConsulta_sem_Pojo.this, "Erro ao gravar dados no banco: "+erro.getMessage(), Toast.LENGTH_LONG).show();
 			  
 		 }
     }
     
-    public void gravarGrupos(String grupo){
+    public void atualizarDados(){
     	try {
-			   String sqlGrupos="INSERT INTO "+tabelaGrupos+" (grupo) values ('"+grupo+"')";		   
-			   bancoDados.execSQL(sqlGrupos);	
-			   Toast.makeText(CadastroConsulta.this, "Grupo Gravado com Sucesso!", Toast.LENGTH_LONG).show();
-		 } catch(Exception erro) {
-			   Toast.makeText(CadastroConsulta.this, "Erro ao gravar grupo no banco: "+erro.getMessage(), Toast.LENGTH_LONG).show();
-			  
-		 }
-    }
-    
-    public boolean gravarPalavraGrupos(){
-    	boolean resultado = true;
-    	if (!etCadastroConsultaGrupo.equals("")){ //Se o Edit Text Estiver vazio não precisa montar array booleano
-    		apagarPalavraGrupos();
-    		String gruposDefinidosNome = etCadastroConsultaGrupo.getText().toString();		 
-			ArrayList<String> gruposSelecionados = new ArrayList<String>
-												(Arrays.asList(gruposDefinidosNome.split(", ")));
-	    	for (int i=0; i < gruposSelecionados.size(); i++){
-	    		try {
-	    			String sqlGrupos="INSERT INTO "+tabelaGruposPalavras+" (grupoNome, PalavraNome) values ('"+gruposSelecionados.get(i)
-		 					   														+"','"+etCadastroConsultaPalavras.getText().toString()+"')";		   
-		 			bancoDados.execSQL(sqlGrupos);	
-		 			Log.i("Sucesso: ", "Referencia Grupo/Palavra Gravado com Sucesso!");
-		 			resultado = true;
-	    		} catch(Exception erro) {
-	    			Log.i("Erro: ", "Erro ao gravar Referencia Grupo/Palabra no banco: "+erro.getMessage());	
-	    			resultado = false;
-	    		}
-	    	}
-    	}
-    	return resultado;
-    	
-    }
-    
-    public void apagarPalavraGrupos(){
-    	buscarDados();
-    	String palavraGrupo = "";
-    	for (Palavras palavraCadastrada : palavras){
-    		if (palavraCadastrada.palavra.equals(etCadastroConsultaPalavras.getText().toString())){
-    			palavraGrupo = palavraCadastrada.palavra;
-    		}
-    	}
-	    try {
-			   String sqlFrases="DELETE FROM "+tabelaGruposPalavras+" WHERE PalavraNome='"+palavraGrupo+"';";								  
-   
-			   bancoDados.execSQL(sqlFrases);	
-			   Log.i("Sucesso:", "Referencia Grupo/Palavra excluidas");
-		 } catch(Exception erro) {
-			 Log.i("Erro:", "Referencia Grupo/Palavra não excluidas");
-				  
-		 }
-    
-    }
-    
-    public boolean gravarFrases(){
-    	boolean resultado = true;
-    	buscarDados();
-    	apagarFrase();
-    	int palavraID = -1;
-    	for (Palavras palavraCadastrada : palavras){
-    		if (palavraCadastrada.palavra.equals(etCadastroConsultaPalavras.getText().toString())){
-    			palavraID = palavraCadastrada.idPalava;
-    		}
-    	}
-    	for (int i = 0; i < classesExemplos.size(); i++){
-	    	try {
-	    		String sqlFrases="INSERT INTO "+tabelaFrases+" (frases, palavraID) values ('"+classesExemplos.get(i)+
-					   																		"', '"+palavraID+"')";		   
-			   	bancoDados.execSQL(sqlFrases);	
-			   	Log.i("Sucesso:", "Frases Referente a palavraID: "+palavraID+" gravadas");
-			   	resultado = true;
-			 } catch(Exception erro) {
-				Log.i("Erro:", "Frases Referente a palavraID: "+palavraID+" não gravadas");		
-				resultado = false;
-			 }
-    	}
-    	return resultado;
-    }
-    
-    public void apagarFrase(){
-    	buscarDados();
-    	int palavraID = -1;
-    	for (Palavras palavraCadastrada : palavras){
-    		if (palavraCadastrada.palavra.equals(etCadastroConsultaPalavras.getText().toString())){
-    			palavraID = palavraCadastrada.idPalava;
-    		}
-    	}
-	    try {
-			   String sqlFrases="DELETE FROM "+tabelaFrases+" WHERE palavraID='"+palavraID+"';";								  
-   
-			   bancoDados.execSQL(sqlFrases);	
-			   Log.i("Sucesso:", "Frases Referente a palavraID: "+palavraID+" excluidas");
-		 } catch(Exception erro) {
-			 Log.i("Erro:", "Frases Referente a palavraID: "+palavraID+" não excluidas");
-				  
-		 }
-    
-    }
-    
-    public boolean atualizarPalavras(){
-    	try {
-			   String sqlPalavra="UPDATE "+tabelaPalavras+" set palavra='"+etCadastroConsultaPalavras.getText().toString()+"', " +
+			   String sqlPalavra="UPDATE palavras set palavra='"+etCadastroConsultaPalavras.getText().toString()+"', " +
 			   								  "definicao='"+etCadastroConsultaDefinicao.getText().toString()+"', "+
 			   								  "classes='"+etCadastroConsultaClasses.getText().toString()+"', "+
 			   								  "traducao='"+etCadastroConsultaTraducao.getText().toString()+"', "+
 			   								  "irregular='"+cbCadastroConsultaIrregular.isChecked()+"', "+
 			   								  "pastform='"+etCadastroConsultaPastForm.getText().toString()+"', "+
-			   								  "pastparticiple='"+etCadastroConsultaPastParticiple.getText().toString()+"' WHERE  idPalava='"+idPalava+"';";								  
-			   bancoDados.execSQL(sqlPalavra);
-			   palavraSelecionada = etCadastroConsultaPalavras.getText().toString();
-			   Log.i("Sucesso: ", "Dados Atualizados com Sucesso!");
-			   return true;
+			   								  "pastparticiple='"+etCadastroConsultaPastParticiple.getText().toString()+"' WHERE  idPalava='"+idPalava+"';";
+			   								  
+			   bancoDados.execSQL(sqlPalavra);	
+			   Toast.makeText(CadastroConsulta_sem_Pojo.this, "Dados Atualizados com Sucesso!", Toast.LENGTH_LONG).show();
 		   }
 		   catch(Exception erro) {
-			   Log.i("Erro: ", "Erro ao ataualizar dados no banco: "+erro.getMessage());
-			  return false;
+			   Toast.makeText(CadastroConsulta_sem_Pojo.this, "Erro ao ataualizar dados no banco: "+erro.getMessage(), Toast.LENGTH_LONG).show();
+			   Log.i("Erro", ""+erro.getMessage());
+			  
 		   }
     }
     
@@ -820,7 +572,7 @@ public class CadastroConsulta extends ActionBarActivity{
 		etCadastroConsultaPastParticiple.setTextColor(Color.BLACK);
 		etCadastroConsultaGrupo.setTextColor(Color.BLACK);
 		
-		Toast.makeText(CadastroConsulta.this, "Você pode editar os campos agora. ", Toast.LENGTH_LONG).show();
+		Toast.makeText(CadastroConsulta_sem_Pojo.this, "Você pode editar os campos agora. ", Toast.LENGTH_LONG).show();
     }
     
     @Override
@@ -848,7 +600,7 @@ public class CadastroConsulta extends ActionBarActivity{
 			return true;
 		}
 		if (id == R.id.menu_add){
-			Intent iTelaCadastroConsulta = new Intent(this, CadastroConsulta.class);
+			Intent iTelaCadastroConsulta = new Intent(this, CadastroConsulta_sem_Pojo.class);
 			startActivity(iTelaCadastroConsulta);
 			return true;
 		}
@@ -864,34 +616,19 @@ public class CadastroConsulta extends ActionBarActivity{
 			if (!etCadastroConsultaPalavras.getText().toString().equals("")){
 				if (!erroPalavra){
 					if (atualizando){
-						if (atualizarPalavras() && gravarPalavraGrupos() && gravarFrases()){
-							Toast.makeText(CadastroConsulta.this, "Dados Atualizados com Sucesso!", Toast.LENGTH_LONG).show();
-						} else {
-							Toast.makeText(CadastroConsulta.this, "Erro ao Atualizar Dados!", Toast.LENGTH_LONG).show();
-						}
-							
-						/*atualizarPalavras();
-						gravarPalavraGrupos();
-						gravarFrases();*/
-					} else {
-						if (gravarPalavras() && gravarPalavraGrupos() && gravarFrases()){
-							Toast.makeText(CadastroConsulta.this, "Dados Gravados com Sucesso!", Toast.LENGTH_LONG).show();
-						} else {
-							Toast.makeText(CadastroConsulta.this, "Erro ao Gravar Dados!", Toast.LENGTH_LONG).show();
-						}
-						/*gravarPalavras();
-						gravarPalavraGrupos();
-						gravarFrases();*/
+						atualizarDados();
+					} else {			
+						gravarDados();
 					}
 					edit.setVisible(true);
 					cancel.setVisible(false);
 					save.setVisible(false);
 					desabilitarCampos();
 				} else {
-					Toast.makeText(CadastroConsulta.this, "Corriga os erros antes de salvar!", Toast.LENGTH_LONG).show();
+					Toast.makeText(CadastroConsulta_sem_Pojo.this, "Corriga os erros antes de salvar!", Toast.LENGTH_LONG).show();
 				}
 			} else {
-				Toast.makeText(CadastroConsulta.this, "O campo palavra não pode estar vazio!", Toast.LENGTH_LONG).show();
+				Toast.makeText(CadastroConsulta_sem_Pojo.this, "O campo palavra não pode estar vazio!", Toast.LENGTH_LONG).show();
 			}
 			return true;
 		}
